@@ -7,12 +7,12 @@ import { requireAuth, signToken, type AuthRequest } from "../middleware/auth.js"
 export const authRouter = Router();
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6)
+  email: z.string().min(3),
+  password: z.string().min(5)
 });
 
-function publicUser(user: { id: string; email: string }) {
-  return { id: user.id, email: user.email };
+function publicUser(user: { id: string; email: string; isAdmin: boolean }) {
+  return { id: user.id, email: user.email, isAdmin: user.isAdmin };
 }
 
 authRouter.post("/register", async (req, res) => {
@@ -32,7 +32,8 @@ authRouter.post("/register", async (req, res) => {
   const user = await prisma.user.create({
     data: {
       email: parsed.data.email,
-      passwordHash
+      passwordHash,
+      isAdmin: false
     }
   });
 

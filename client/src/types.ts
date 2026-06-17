@@ -4,6 +4,7 @@ export type InviteStatus = "PENDING" | "ACCEPTED" | "DECLINED";
 export type User = {
   id: string;
   email: string;
+  isAdmin: boolean;
 };
 
 export type FaceitStats = {
@@ -34,6 +35,7 @@ export type Profile = {
   primeTime: string;
   hasMicrophone: boolean;
   description: string;
+  avatarUrl?: string | null;
   user?: User;
   faceitStats?: FaceitStats | null;
 };

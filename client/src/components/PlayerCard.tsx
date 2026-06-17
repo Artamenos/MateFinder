@@ -11,12 +11,21 @@ const roleLabels = {
 };
 
 export function PlayerCard({ profile }: { profile: Profile }) {
+  const avatarText = profile.nickname.slice(0, 2).toUpperCase();
+
   return (
     <article className="player-card">
       <div className="player-card__top">
-        <div>
-          <h3>{profile.nickname}</h3>
-          <p>{roleLabels[profile.role]} • {profile.rank}</p>
+        <div className="player-identity">
+          {profile.avatarUrl ? (
+            <img className="player-avatar image" src={profile.avatarUrl} alt={profile.nickname} />
+          ) : (
+            <span className="player-avatar">{avatarText}</span>
+          )}
+          <div>
+            <h3>{profile.nickname}</h3>
+            <p>{roleLabels[profile.role]} • {profile.rank}</p>
+          </div>
         </div>
         <div className="level-badge">LVL {profile.faceitLevel ?? "-"}</div>
       </div>

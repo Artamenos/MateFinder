@@ -3,11 +3,14 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppLayout } from "./components/AppLayout";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AdminPage } from "./pages/AdminPage";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { InvitesPage } from "./pages/InvitesPage";
 import { PlayerPage } from "./pages/PlayerPage";
+import { PraccsPage } from "./pages/PraccsPage";
 import { ProfileEditorPage } from "./pages/ProfileEditorPage";
+import { TeamsPage } from "./pages/TeamsPage";
 import { TeammatesPage } from "./pages/TeammatesPage";
 import "./styles.css";
 
@@ -20,6 +23,24 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/auth" replace />;
+  }
+
+  return children;
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="loading">Загрузка...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!user.isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return children;
@@ -54,6 +75,30 @@ function App() {
                 <ProtectedRoute>
                   <TeammatesPage />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/teams"
+              element={
+                <ProtectedRoute>
+                  <TeamsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/praccs"
+              element={
+                <ProtectedRoute>
+                  <PraccsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminPage />
+                </AdminRoute>
               }
             />
             <Route
