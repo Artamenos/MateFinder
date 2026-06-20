@@ -1,5 +1,6 @@
-import { CalendarClock, Map, Plus, Settings2, Swords } from "lucide-react";
-import { useState } from "react";
+import { CalendarClock, Filter, Map, Plus, Settings2, Swords } from "lucide-react";
+import { useMemo, useState } from "react";
+import { faceitLevelClass } from "../utils/faceitLevel";
 
 type Pracc = {
   id: number;
@@ -38,11 +39,32 @@ const initialPraccs: Pracc[] = [
     region: "EU",
     server: "Германия",
     requirements: "Отработка дефолтов, ретейков и выходов на B. Желательно наличие тренера или капитана."
+  },
+  {
+    id: 3,
+    title: "Mirage вечерний пракк",
+    map: "Mirage",
+    date: "2026-06-21",
+    time: "20:00 MSK",
+    format: "BO1, demo review",
+    level: "Faceit 6-8",
+    region: "RU / EU",
+    server: "Москва",
+    requirements: "Спокойная тренировка: пистолетки, дефолт, мидраунд и разбор после игры."
   }
 ];
 
+function normalize(value: string) {
+  return value.trim().toLowerCase();
+}
+
 export function PraccsPage() {
   const [praccs, setPraccs] = useState(initialPraccs);
+  const [search, setSearch] = useState("");
+  const [mapFilter, setMapFilter] = useState("");
+  const [timeFilter, setTimeFilter] = useState("");
+  const [serverFilter, setServerFilter] = useState("");
+  const [formatFilter, setFormatFilter] = useState("");
   const [form, setForm] = useState({
     title: "Пракк Mirage под вечер",
     map: "Mirage",
@@ -54,6 +76,24 @@ export function PraccsPage() {
     server: "Москва",
     requirements: "Ищем команду для спокойной тренировки: пистолетки, дефолт, мидраунд и разбор после игры."
   });
+
+  const filteredPraccs = useMemo(() => {
+    const titleQuery = normalize(search);
+    const mapQuery = normalize(mapFilter);
+    const timeQuery = normalize(timeFilter);
+    const serverQuery = normalize(serverFilter);
+    const formatQuery = normalize(formatFilter);
+
+    return praccs.filter((pracc) => {
+      return (
+        (!titleQuery || normalize(pracc.title).includes(titleQuery)) &&
+        (!mapQuery || normalize(pracc.map).includes(mapQuery)) &&
+        (!timeQuery || normalize(`${pracc.date} ${pracc.time}`).includes(timeQuery)) &&
+        (!serverQuery || normalize(`${pracc.region} ${pracc.server}`).includes(serverQuery)) &&
+        (!formatQuery || normalize(pracc.format).includes(formatQuery))
+      );
+    });
+  }, [praccs, search, mapFilter, timeFilter, serverFilter, formatFilter]);
 
   function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -72,6 +112,23 @@ export function PraccsPage() {
           <h1>Пракки</h1>
         </div>
       </header>
+
+      <section className="pracc-filters panel">
+        <Filter size={18} />
+        <input placeholder="Поиск по названию пракка" value={search} onChange={(event) => setSearch(event.target.value)} />
+        <select value={mapFilter} onChange={(event) => setMapFilter(event.target.value)}>
+          <option value="">Любая карта</option>
+          <option>Mirage</option>
+          <option>Inferno</option>
+          <option>Ancient</option>
+          <option>Nuke</option>
+          <option>Anubis</option>
+          <option>Dust2</option>
+        </select>
+        <input placeholder="Время: 20:00 или дата" value={timeFilter} onChange={(event) => setTimeFilter(event.target.value)} />
+        <input placeholder="Сервер или регион" value={serverFilter} onChange={(event) => setServerFilter(event.target.value)} />
+        <input placeholder="Формат: BO1, BO3..." value={formatFilter} onChange={(event) => setFormatFilter(event.target.value)} />
+      </section>
 
       <section className="pracc-layout">
         <form className="panel pracc-form" onSubmit={createPracc}>
@@ -135,14 +192,21 @@ export function PraccsPage() {
         </form>
 
         <div className="match-list">
-          {praccs.map((pracc) => (
+          {filteredPraccs.length === 0 && (
+            <section className="empty-state">
+              <h2>Пракки не найдены</h2>
+              <p className="muted">Попробуйте изменить карту, время, сервер, формат или строку поиска.</p>
+            </section>
+          )}
+
+          {filteredPraccs.map((pracc) => (
             <article className="panel match-card" key={pracc.id}>
               <div className="match-card__head">
                 <div>
                   <h2>{pracc.title}</h2>
                   <p className="muted">{pracc.region} · {pracc.server}</p>
                 </div>
-                <span className="level-badge">{pracc.level}</span>
+                <span className={`level-badge ${faceitLevelClass(pracc.level)}`}>{pracc.level}</span>
               </div>
 
               <div className="match-grid">

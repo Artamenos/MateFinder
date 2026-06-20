@@ -111,14 +111,15 @@ function levelFromElo(elo: number) {
 
 async function main() {
   const passwordHash = await bcrypt.hash("password123", 10);
+  const artamenosPasswordHash = await bcrypt.hash("12345", 10);
 
   for (const player of players) {
     const user = await prisma.user.upsert({
       where: { email: player.email },
-      update: {},
+      update: player.nickname === "Artamenos" ? { passwordHash: artamenosPasswordHash } : {},
       create: {
         email: player.email,
-        passwordHash
+        passwordHash: player.nickname === "Artamenos" ? artamenosPasswordHash : passwordHash
       }
     });
 

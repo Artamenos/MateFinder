@@ -207,6 +207,39 @@ async function main() {
       }
     });
   }
+
+  await prisma.team.deleteMany();
+
+  await prisma.team.createMany({
+    data: [
+      {
+        name: "Arta Stack",
+        level: "FACEIT 6-10",
+        region: "EU / RU",
+        captain: "Artamenos",
+        membersJson: JSON.stringify(["Artamenos"]),
+        playersJson: JSON.stringify(["Artamenos", "", "", "", ""]),
+        coach: "",
+        substitutesJson: JSON.stringify(["", ""]),
+        goals: "Core demo team for testing captain tools, requests, invites and roster editing.",
+        pendingInvitesJson: JSON.stringify(["hushgh"]),
+        pendingRequestsJson: JSON.stringify(["hushgh", "ludorolog", "MRAOF", "Skvorets", "flash_master"])
+      },
+      {
+        name: "Purple Execute",
+        level: "FACEIT 4-7",
+        region: "EU",
+        captain: "flash_master",
+        membersJson: JSON.stringify(["flash_master", "s1mple_vibes", "m0nesy_style"]),
+        playersJson: JSON.stringify(["flash_master", "s1mple_vibes", "m0nesy_style", "", ""]),
+        coach: "",
+        substitutesJson: JSON.stringify(["", ""]),
+        goals: "Evening practice stack focused on Mirage, Ancient and utility-heavy rounds.",
+        pendingInvitesJson: JSON.stringify([]),
+        pendingRequestsJson: JSON.stringify([])
+      }
+    ]
+  });
 }
 
 main()

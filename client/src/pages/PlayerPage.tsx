@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { Profile } from "../types";
+import { faceitLevelClass } from "../utils/faceitLevel";
 
 export function PlayerPage() {
   const { id } = useParams();
@@ -65,7 +66,7 @@ export function PlayerPage() {
           <h2>Faceit</h2>
           {profile.faceitStats ? (
             <div className="faceit-panel">
-              <div className="level-badge big">LVL {profile.faceitStats.level}</div>
+              <div className={`level-badge big ${faceitLevelClass(profile.faceitStats.level)}`}>LVL {profile.faceitStats.level}</div>
               <span>ELO <b>{profile.faceitStats.elo}</b></span>
               <span>Матчи <b>{profile.faceitStats.matches}</b></span>
               <span>Winrate <b>{profile.faceitStats.winRate}%</b></span>

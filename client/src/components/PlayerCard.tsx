@@ -1,6 +1,7 @@
-import { Mic, MicOff, Send } from "lucide-react";
+import { Gauge, Mic, MicOff, Send } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Profile } from "../types";
+import { faceitLevelClass } from "../utils/faceitLevel";
 
 const roleLabels = {
   RIFLER: "Rifler",
@@ -27,10 +28,10 @@ export function PlayerCard({ profile }: { profile: Profile }) {
             <p>{roleLabels[profile.role]} • {profile.rank}</p>
           </div>
         </div>
-        <div className="level-badge">LVL {profile.faceitLevel ?? "-"}</div>
+        <div className={`level-badge ${faceitLevelClass(profile.faceitLevel)}`}>LVL {profile.faceitLevel ?? "-"}</div>
       </div>
 
-      <p className="muted">{profile.description}</p>
+      <p className="player-summary">{profile.description}</p>
 
       <div className="stats-grid">
         <span>Карты<b>{profile.maps}</b></span>
@@ -41,7 +42,7 @@ export function PlayerCard({ profile }: { profile: Profile }) {
 
       {profile.faceitStats && (
         <div className="mini-faceit">
-          <span>ELO {profile.faceitStats.elo}</span>
+          <span className="elo-chip"><Gauge size={14} /> ELO {profile.faceitStats.elo}</span>
           <span>WR {profile.faceitStats.winRate}%</span>
           <span>K/D {profile.faceitStats.averageKd}</span>
         </div>

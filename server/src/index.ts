@@ -6,6 +6,7 @@ import { authRouter } from "./routes/auth.js";
 import { faceitRouter } from "./routes/faceit.js";
 import { inviteRouter } from "./routes/invites.js";
 import { profileRouter } from "./routes/profiles.js";
+import { teamRouter } from "./routes/teams.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/profiles", profileRouter);
 app.use("/api/faceit", faceitRouter);
 app.use("/api/invites", inviteRouter);
+app.use("/api/teams", teamRouter);
 
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);

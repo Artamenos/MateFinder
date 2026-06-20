@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -87,4 +87,21 @@ model Invite {
   receiver User @relation("ReceivedInvites", fields: [receiverId], references: [id], onDelete: Cascade)
 
   @@unique([senderId, receiverId])
+}
+
+model Team {
+  id              String   @id @default(cuid())
+  name            String
+  level           String
+  region          String
+  captain         String
+  membersJson     String
+  playersJson     String
+  coach           String   @default("")
+  substitutesJson String
+  goals           String
+  pendingInvitesJson  String @default("[]")
+  pendingRequestsJson String @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

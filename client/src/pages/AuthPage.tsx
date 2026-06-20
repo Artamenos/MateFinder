@@ -1,4 +1,3 @@
-import { Crosshair } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -31,7 +30,7 @@ export function AuthPage() {
     <main className="auth-screen">
       <section className="auth-panel">
         <div className="auth-copy">
-          <div className="brand-mark large"><Crosshair size={32} /></div>
+          <img className="brand-logo large" src="/logo-matefinder.png" alt="MateFinder" />
           <h1>CS2 Team Finder</h1>
           <p>Платформа для поиска тиммейтов по ролям, навыкам, времени игры и Faceit-статистике.</p>
           <div className="auth-highlights">
